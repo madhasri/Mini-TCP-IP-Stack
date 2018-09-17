@@ -1,0 +1,90 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<conio.h>
+int data_len;
+int crc[33] = {1,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,1,0,0,0,1,1,1,0,1,1,0,1,1,0,1,1,1};
+
+int xoro(char a , char b)
+{
+
+    if( (a=='1' && b=='1') || ( a=='0' && b=='0'))
+    return 0;
+    else
+    return 1;
+}
+
+
+void crc8( char rev_rem[] , char input[])
+{
+    int i,j;
+    char temp;
+    char res;
+    puts(rev_rem);
+
+    for( i =0 ; i< data_len + 32 ; i++)
+    {
+        temp = rev_rem[31];
+        for( j =31; j>=0 ; j--)
+        {
+            if(j == 0)
+            {res = xoro(input[i],temp);
+
+            rev_rem[j] = res+'0';
+            continue;
+            }
+
+            if( crc[j]==1)
+            rev_rem[j] = xoro(rev_rem[j-1],temp)+'0';
+
+            else if (crc[j] == 0){
+            rev_rem[j] = rev_rem[j-1];
+            }
+
+
+
+
+
+        }
+
+
+    }
+    printf("\n Remainder:");
+    for( j =31; j>=0 ; j--)
+        {
+        printf("%c",rev_rem[j]);
+
+        }
+
+
+}
+
+
+main()
+{
+    char input[100] ;
+    char rev_rem[100];
+    int i;
+    printf("\n Enter data :");
+    gets(input);
+    data_len = strlen(input);
+
+    /*crc 8*/
+
+    for(i = 0 ; i<32 ; i++)
+    {
+
+        input[ data_len + i] = '0';
+    }
+    input[ data_len + i] = NULL;
+
+    for( i = 0 ; i< 32 ; i++)
+    {
+
+      rev_rem[i] = '0';
+    }
+    rev_rem[i] = NULL;
+
+    crc8( rev_rem , input);
+
+}
